@@ -15,11 +15,6 @@ Requires Go 1.25 or later.
 DynamoDB [TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) attributes store an expiration time as a **Number** of Unix seconds.
 The `TTL` type wraps `time.Time` and implements the AWS SDK v2 `attributevalue` marshaler interfaces, so it round-trips correctly with `attributevalue.Marshal` and `attributevalue.Unmarshal`.
 
-| Function / method | Description |
-|---|---|
-| `NewTTL(time.Time) TTL` | Construct a `TTL` from a `time.Time` |
-| `(TTL) Time() time.Time` | Convert a `TTL` back to `time.Time` |
-
 ```go
 import (
     "time"
