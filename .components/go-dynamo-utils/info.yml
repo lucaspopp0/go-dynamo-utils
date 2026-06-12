@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/slingshot-pipelines/jsonschemas/main/schemas/component/v1/component.schema.json
+
+component: go-dynamo-utils
+type: library
+
+path: .
+
+source-language: go
+tag-prefix: v

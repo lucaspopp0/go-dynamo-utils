@@ -1,0 +1,47 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed-components: ${{ steps.changed-components.outputs.changed-components }}
+      changed-component-types: ${{ steps.changed-components.outputs.changed-component-types }}
+      changed-components-by-type: ${{ steps.changed-components.outputs.changed-components-by-type }}
+    steps:
+      -
+        uses: actions/checkout@v6
+      -
+        name: Detect changed components
+        id: changed-components
+        uses: slingshot-pipelines/action-components-changed@v1
+  
+  release-libraries:
+    needs:
+      - detect-changes
+    if: ${{ contains(needs.detect-changes.outputs.changed-component-types, '"library"') }}
+    uses: slingshot-pipelines/workflows/.github/workflows/release-library.yml@release-library/v0
+    strategy:
+      matrix:
+        COMPONENT: ${{ fromJSON(needs.detect-changes.outputs.changed-components-by-type).library }}
+    with:
+      COMPONENT: ${{ matrix.COMPONENT }}
+    secrets: inherit
