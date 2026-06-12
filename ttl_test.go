@@ -20,7 +20,7 @@ func TestTTL_Conversions(t *testing.T) {
 	t.Run("success-direct-calls", func(t *testing.T) {
 		// Create a TTL
 		now := time.Now().Truncate(time.Second)
-		ttl := TTL(now)
+		ttl := NewTTL(now)
 
 		// Marshal it to an attribute value
 		marshaled, err := attributevalue.Marshal(ttl)
@@ -36,7 +36,7 @@ func TestTTL_Conversions(t *testing.T) {
 		require.NoError(t, err)
 
 		// Validate the unmarshaled result is correct
-		require.WithinDuration(t, time.Time(ttl), time.Time(unmarshaled), 10*time.Millisecond)
+		require.WithinDuration(t, ttl.Time(), unmarshaled.Time(), 10*time.Millisecond)
 	})
 
 	t.Run("success-as-field", func(t *testing.T) {
@@ -46,7 +46,7 @@ func TestTTL_Conversions(t *testing.T) {
 
 		// Create a TTL
 		now := time.Now().Truncate(time.Second)
-		original := ArbitraryStruct{TTL: TTL(now)}
+		original := ArbitraryStruct{TTL: NewTTL(now)}
 
 		// Marshal it to an attribute value
 		marshaled, err := attributevalue.Marshal(original)
@@ -65,7 +65,7 @@ func TestTTL_Conversions(t *testing.T) {
 		require.NoError(t, err)
 
 		// Validate the unmarshaled result is correct
-		require.WithinDuration(t, time.Time(original.TTL), time.Time(unmarshaled.TTL), 10*time.Millisecond)
+		require.WithinDuration(t, original.TTL.Time(), unmarshaled.TTL.Time(), 10*time.Millisecond)
 	})
 
 	t.Run("unmarshal-err-non-number", func(t *testing.T) {

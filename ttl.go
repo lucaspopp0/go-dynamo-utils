@@ -11,6 +11,14 @@ import (
 
 type TTL time.Time
 
+func NewTTL(ts time.Time) TTL {
+	return TTL(ts)
+}
+
+func (t TTL) Time() time.Time {
+	return time.Time(t)
+}
+
 // MarshalDynamoDBAttributeValue implements [attributevalue.Marshaler].
 func (t TTL) MarshalDynamoDBAttributeValue() (types.AttributeValue, error) {
 	// Convert the TTL timestamp to unix seconds
